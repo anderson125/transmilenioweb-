@@ -1,0 +1,11 @@
+  .container {
+    position: relative;
+    text-align: center;
+    color: white;
+  }
+  .Imglabel {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
