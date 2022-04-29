@@ -2,7 +2,7 @@
   <div id="wrapper">
     <!-- change: color -->
     <ul
-      class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+      class="navbar-nav bg-gradient-danger sidebar sidebar-dark accordion"
       id="accordionSidebar"
     >
       <!-- Sidebar - Brand -->
@@ -79,12 +79,12 @@
           <span>Inventario</span>
         </router-link>
       </li>
-      
-      
-      
 
 
-      
+
+
+
+
 
 
       <!--<li class="nav-item" v-if="debug">
@@ -248,7 +248,7 @@
       <!-- End of Footer -->
     </div>
   </div>
-  
+
 </template>
 <script>
 import toastr from "toastr";

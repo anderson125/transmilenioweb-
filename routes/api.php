@@ -86,25 +86,25 @@ Route::middleware(['auth:sanctum',PermissionsChecker::class])->group(function ()
         Route::resource('stickers', ProvisionalStickerOrdersController::class)->only(['index','show','store','update']);
         Route::resource('Dstickers', DetailedStickerOrderController::class)->only(['index','show','store','update']);
         Route::resource('maintenance', ParkingMaintenancesController::class);
-        
+
         Route::resource('roles', RolesController::class)->only(['index','store','destroy']);
         Route::post('roles/asignToUser/{id}', [RolesController::class,'asignToUser']);
         Route::post('roles/revokeToUser/{id}', [RolesController::class,'revokeToUser']);
         Route::post('roles/authRoleTo/{id}', [RolesController::class,'authRoleTo']);
         Route::post('roles/unauthorizeRoleTo/{id}', [RolesController::class,'unauthorizeRoleTo']);
 
-    
+
         Route::get('bicy/detailed/{id}', [BicyController::class,'detailedShow']);
         Route::resource('bicy', BicyController::class)->except(['create']);
         Route::get('bicy/{parking_id}/create',[BicyController::class,'create']);
         Route::post('bicy/{id}', [BicyController::class,'update']);
-        Route::get('qr/bicy', [BicyController::class,'returnQRInfo']);       
+        Route::get('qr/bicy', [BicyController::class,'returnQRInfo']);
 
         Route::post('biker/massiveRawMsg', [BikerController::class,'massiveRawTextMessage']);
         Route::resource('biker', BikerController::class);
         Route::post('biker/{id}', [BikerController::class,'update']);
-        Route::get('biker/verificationCode/{phone}', [BikerController::class,'getVerificationCode'] );        
-        Route::get('biker-export', [BikerController::class,'export'] );        
+        Route::get('biker/verificationCode/{phone}', [BikerController::class,'getVerificationCode'] );
+        Route::get('biker-export', [BikerController::class,'export'] );
         Route::post('biker/parentVerificationCode/{id}', [ParentsController::class,'getParentVerificationCode']);
         Route::put('biker/{id}/unblock', [BikerController::class,'unblockBiker']);
 
@@ -130,7 +130,7 @@ Route::middleware(['auth:sanctum',PermissionsChecker::class])->group(function ()
         Route::get('reports/visits/detailedBikerByMonths',[ReportsController::class, 'detailedBikerVisitsByMonths']);
         Route::get('reports/visits/hourlyByDays',[ReportsController::class, 'hourlyVisitsByDays']);
         Route::get('reports/visits/abandonedBicies',[ReportsController::class, 'visitAbandonedBicies']);
-        Route::get('reports/visits/webMapService',[ReportsController::class, 'webMapService']);
+        Route::get('reports/visits/inventoryMapService',[ReportsController::class, 'webMapService']);
     });
 
     Route::name('user.')->group(function(){
@@ -154,7 +154,7 @@ Route::post('code/{code}', function(Request $request, $code){
     Route::put('bikerActiveness',[BikerController::class, 'checkActiveness']);
     Route::put('bikeExpiration',[BicyController::class, 'checkBiciesExpirations']);
     Route::put('bikeAbandoning',[BicyController::class, 'checkAbandonedBicies']);
-    
+
 });
 
 Route::get('/{any}', [CasualController::class,'returnNotFound'])->where('any','.*');
