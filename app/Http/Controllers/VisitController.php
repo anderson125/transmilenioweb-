@@ -42,7 +42,7 @@ class VisitController extends Controller
                 ->join('bikers', 'bikers.id', '=', 'visits.bikers_id')
                 ->join('bicies', 'bicies.id', '=', 'visits.bicies_id')
                 ->join('visit_statuses', 'visit_statuses.id', '=', 'visits.visit_statuses_id')
-                ->select('visits.*', 
+                ->select('visits.*',
                     DB::raw('IF(visits.duration = 0 , NULL ,visits.date_output) as date_output'),
                     DB::raw('IF(visits.duration = 0 , NULL ,SUBSTRING(visits.time_output,1,5)) as time_output'),
                     DB::raw('SUBSTRING(visits.time_input,1,5) as time_input'),
@@ -86,7 +86,7 @@ class VisitController extends Controller
             Log::emergency($th);
             return response()->json(['message'=>'Internal Error', 'response'=>['errors'=>[$th->getMessage()]]],500);
         }
-        
+
     }
 
     /**
@@ -134,11 +134,11 @@ class VisitController extends Controller
                 'bicy.exists'=> 'El campo bicicleta no acerta ningún registro existente',
 
                 'dateInput.required'=>'El campo fecha de ingreso es requerido',
-                'dateInput.date'=>'El campo fecha de ingreso es de tipo fecha', 
+                'dateInput.date'=>'El campo fecha de ingreso es de tipo fecha',
 
                 'timeInput.required'=>'El campo hora de ingreso es requerido',
                 'timeInput.date_format'=>'El campo hora de ingreso es de tipo hora (00:00)',
-                
+
                 'status.required'=>'El campo estado de la visita es requerido',
                 'status.exists'=>'El campo estado de la visita no acerta ningún registro existente'
 
@@ -151,8 +151,8 @@ class VisitController extends Controller
             if ($validator->fails()) {
                 return response()->json(['response' => ['errors'=>$validator->errors()->all() ], 'message' => 'Bad Request'], 400);
             }
-            
-            
+
+
             $curddate = $request->dateInput;
             $visits = Visit::where(['date_input'=>$request->dateInput, 'parkings_id'=>$request->parking])->get();
             $number = $visits->count() + 1;
@@ -167,13 +167,13 @@ class VisitController extends Controller
                 'duration' => 0,
                 'date_input' => $request->dateInput,
                 'time_input' => $request->timeInput,
-                'date_output' => $request->dateInput,
-                'time_output' => $request->timeInput,
+                'date_output' => 0,
+                'time_output' => 0,
                 'visit_statuses_id' => $request->status,
-                ]);           
+                ]);
 
             $smsResponse = $bicy->biker->notifyBicyStorage($bicy->id,$request->parking,$visit->id);
-            
+
             $visit->getCode();
             return response()->json(['message'=>'Success', 'response'=>['data'=>$visit,'errors'=>[]]],201);
         } catch (QueryException $th) {
@@ -204,18 +204,18 @@ class VisitController extends Controller
                 'bicy.exists'=> 'El campo bicicleta no acerta ningún registro existente',
 
                 'dateInput.required'=>'El campo fecha de ingreso es requerido',
-                'dateInput.date'=>'El campo fecha de ingreso es de tipo fecha (AAAA-MM-DD)', 
-                
+                'dateInput.date'=>'El campo fecha de ingreso es de tipo fecha (AAAA-MM-DD)',
+
                 'timeInput.required'=>'El campo hora de ingreso es requerido',
                 'timeInput.date_format'=>'El campo hora de ingreso es de tipo hora (00:00)',
-                
-                'dateOutput.date'=>'El campo fecha de salida es de tipo fecha (AAAA-MM-DD)', 
+
+                'dateOutput.date'=>'El campo fecha de salida es de tipo fecha (AAAA-MM-DD)',
                 'timeOutput.date_format'=>'El campo hora de salida es de tipo hora (00:00)',
             ]
         ];
 
         try {
-            
+
             if(!$request->visits){ return response()->json(['message'=>'Bad Request', 'response'=>['errors'=>['No se han recibido visitas en la petición.']]],400);}
             if(gettype($request->visits) != 'array'){ return response()->json(['message'=>'Bad Request', 'response'=>['errors'=>['El cuerpo de la petición no contempla un formato apropiado, este debe ser el de una lista de visitas.']]],400);}
 
@@ -226,13 +226,13 @@ class VisitController extends Controller
             $succeses = [];
             $log = [];
             foreach($request->visits as $i => $visit){
-                
+
                 $currentVisitErrors = [];
                 $validator = Validator::make($visit, $validation['rules'], $validation['messages']);
                 if ($validator->fails()) {
                     $currentVisitErrors = array_merge($currentVisitErrors , $validator->errors()->all());
                 }
-                
+
                 $Bicy  = Bicy::where(['code'=>$visit['bicy']])->first();
                 if(!count($currentVisitErrors)){
 
@@ -241,7 +241,7 @@ class VisitController extends Controller
                         $log[] = "La visita #$i Ha sido abierta previamente";
                         if(!(array_key_exists('dateOutput',$visit) && $visit['dateOutput']) || !(array_key_exists('timeOutput',$visit) && $visit['timeOutput'])){
                             $log[] = "La visita #$i Aunque existente previamente no ha sido cerrada. Ningún proceso ha sido realizado";
-                            
+
                         }else{
                             $log[] = "La visita #$i abierta previamente ha sido cerrada";
                             $prevOpenedVisit->time_output = $visit['timeOutput'];
@@ -280,7 +280,7 @@ class VisitController extends Controller
 
                         if(!(array_key_exists('dateOutput',$visit) && $visit['dateOutput']) || !(array_key_exists('timeOutput',$visit) && $visit['timeOutput'])){
                             $log[] = "La visita #$i Ha sido abierta pero no cerrada";
-                            
+
                         }else{
                             $log[] = "La visita #$i Ha sido abierta y cerrada";
                             $visitSchema['duration'] =$this->calculateDuration(
@@ -306,8 +306,8 @@ class VisitController extends Controller
 
             }
 
-            
-            
+
+
             return response()->json(['message'=>'Success', 'response'=>['data'=>$succeses, 'errors'=>$errors, 'log'=>$log]],201);
         } catch (QueryException $th) {
             Log::emergency($th);
@@ -338,7 +338,7 @@ class VisitController extends Controller
         $data = DB::table('visits')
             ->join('bikers', 'bikers.id', '=', 'visits.bikers_id')
             ->join('bicies', 'bicies.id', '=', 'visits.bicies_id')
-            ->select('visits.*', 
+            ->select('visits.*',
                 DB::raw('IF(visits.duration = 0 , CURDATE() ,visits.date_output) as date_output'),
                 DB::raw('IF(visits.duration = 0 , SUBSTRING(CURTIME(),1,5) ,SUBSTRING(visits.time_output,1,5)) as time_output'),
                 DB::raw('SUBSTRING(visits.time_input,1,5) as time_input'),
@@ -360,7 +360,7 @@ class VisitController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $request->request->add(['visit'=>$id]);
 
         $validation = [
@@ -374,14 +374,14 @@ class VisitController extends Controller
                 'visit.required'=>'El campo visita es requerido',
                 'visit.exists'=>'El campo visita no acerta ningún registro existente',
                 'dateOutput.required'=>'El campo fecha de salida es requerido',
-                'dateOutput.date'=>'El campo fecha de salida es de tipo fecha',                
+                'dateOutput.date'=>'El campo fecha de salida es de tipo fecha',
                 'timeOutput.required'=>'El campo hora de salida es requerido',
-                'timeOutput.date'=>'El campo hora de salida es de tipo hora (00:00)',                
+                'timeOutput.date'=>'El campo hora de salida es de tipo hora (00:00)',
                 'status.required'=>'El campo estado de la visita es requerido',
                 'status.exists'=>'El campo estado de la visita no acerta ningún registro existente'
             ]
         ];
-        
+
         if (is_numeric($request->number)) {
             $number = $request->number + 1;
         }else{
@@ -396,7 +396,7 @@ class VisitController extends Controller
 
             $visit = Visit::find($id);
             $biker= Biker::find($visit->bikers_id);
-            
+
             $sDate = "{$visit->date_input} {$visit->time_input}";
             $eDate = "{$request->dateOutput} {$request->timeOutput}:00";
             if($sDate > $eDate){
@@ -413,7 +413,7 @@ class VisitController extends Controller
             $duration += $since_start->i;
             $duration *= 60;
             $duration ++; // If it's closed at the same minute
-            
+
             // $visit->parkings_id = $request->parking;
             // $visit->bikers_id = $request->biker;
             // $visit->date_input = $request->dateInput;
@@ -424,9 +424,9 @@ class VisitController extends Controller
             $visit->duration = $duration;
             $visit->visit_statuses_id = $request->status;
             $visit->save();
-            
+
             $smsResponse = $biker->notifyBicyPullOut($visit->bicies_id,$visit->parkings_id,$visit->id);
-            
+
             return response()->json(['message'=>'Success', 'response'=>['errors'=>[]]],200);
 
         } catch (QueryException $th) {
@@ -445,13 +445,13 @@ class VisitController extends Controller
             ],
             "messages" => [
                 'dateOutput.required'=>'El campo fecha de salida es requerido',
-                'dateOutput.date'=>'El campo fecha de salida es de tipo fecha',                
+                'dateOutput.date'=>'El campo fecha de salida es de tipo fecha',
                 'timeOutput.required'=>'El campo hora de salida es requerido',
-                'timeOutput.date'=>'El campo hora de salida es de tipo hora (00:00)',                
+                'timeOutput.date'=>'El campo hora de salida es de tipo hora (00:00)',
             ]
         ];
-        
-        
+
+
         $number = (is_numeric($request->number)) ?  $request->number + 1 : 0;
         try {
 
@@ -492,19 +492,19 @@ class VisitController extends Controller
                 $duration += $since_start->i;
                 $duration *= 60;
                 if($duration == 0){ $duration++; } // If it's closed at the same minute
-                
+
                 $visit->date_output = $request->dateOutput;
                 $visit->time_output = $request->timeOutput;
                 $visit->duration = $duration;
                 if($visit->save()){
                     $responses[]= $visit;
                 }
-                
+
                 $smsResponse = $biker->notifyBicyPullOut($visit->bicies_id,$visit->parkings_id,$visit->id);
             }
-            
-            
-            
+
+
+
             return response()->json(['message'=>'Success', 'response'=>['data'=>[$responses],'errors'=>[]]],200);
 
         } catch (QueryException $th) {
@@ -537,7 +537,7 @@ class VisitController extends Controller
 
     /**
      * Calculates visit duration
-     * 
+     *
      * @param Array $entry
      * @param Array $exit
      * @return Int $duration

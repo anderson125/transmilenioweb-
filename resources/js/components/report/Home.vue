@@ -39,6 +39,11 @@
             <Rp6Component />
           </div>
         </b-tab>
+        <b-tab title="Pernoctas">
+             <div v-if="tabComponent == 6">
+                 <Rp7Component />
+             </div>
+        </b-tab>
       </b-tabs>
     </b-card>
   </div>
@@ -50,6 +55,7 @@ import Rp3Component from "./Rp3";
 import Rp4Component from "./Rp4";
 import Rp5Component from "./Rp5";
 import Rp6Component from "./Rp6";
+import Rp7Component from "./Rp7";
 export default {
   components: {
     Rp1Component,
@@ -58,6 +64,7 @@ export default {
     Rp4Component,
     Rp5Component,
     Rp6Component,
+    Rp7Component,
   },
   data() {
     return {

@@ -9,7 +9,7 @@
         active-nav-item-class="font-weight-bold text-danger"
         content-class="mt-3"
       >
-        <b-tab title="Inicio" active>
+        <b-tab title="Mesa de ayuda" active>
           <div v-if="tabComponent == 0">
             <XxxComponent />
           </div>

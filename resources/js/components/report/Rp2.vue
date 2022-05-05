@@ -3,9 +3,9 @@
     <div class="my-2">
       <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
         <form ref="form" @submit.prevent="handleSubmit(dataSubmit)" @reset="onReset" v-if="show">
-          
+
           <div class="row">
-            <div class="form-group col">              
+            <div class="form-group col">
               <b-form-group label="Fecha Incial" label-for="start-input">
                 <ValidationProvider
                     name="Fecha Inicial"
@@ -65,8 +65,8 @@
               </b-form-group>
             </div>
           </div>
-          
-          
+
+
           <b-button type="submit" variant="primary">Generar</b-button>
           <b-button type="reset" variant="danger">Reset</b-button>
         </form>
@@ -113,7 +113,7 @@ export default {
       es,
       form : {
         start: new Date().toISOString(),
-        end: null,
+        end: new Date().toISOString(),
       },
       rows : [],
       columns : [
@@ -156,7 +156,7 @@ export default {
       let dateStart = new Date(date_input).getTime();
       let dateEnd = new Date(date_output).getTime();
 
-      if (dateStart >= dateEnd) {
+      if (dateStart > dateEnd) {
         return toastr.error("La fecha final no puede ser menor a la fecha inicial")
       }
 
@@ -166,7 +166,7 @@ export default {
           }else{
             console.warn({res});
             toastr.success("Error en la petición.");
-            
+
           }
       });
     },
@@ -196,8 +196,8 @@ export default {
     onReset(event) {
       event.preventDefault();
       // Reset our form values
-      this.start = null;
-      this.end = null;
+      this.form.start = new Date().toISOString();
+      this.form.end = new Date().toISOString();
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {

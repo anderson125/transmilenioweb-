@@ -34,7 +34,7 @@ use App\Http\Controllers\ParkingMaintenancesController;
 use App\Http\Controllers\InventoryBiciesController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\ProvisionalStickerOrdersController;
-use App\Http\Controllers\DetailedStickerOrderController;        
+use App\Http\Controllers\DetailedStickerOrderController;
 
 use App\Http\Controllers\Auth\QuerierUserController;
 use App\Http\Controllers\Auth\VigilantUserController;
@@ -65,7 +65,7 @@ Route::group(['prefix' => 'web'], function () {
         Route::post('checkToken', function (Request $request) {
             return response()->json(['test'=>$request->user()]);
         });
-        
+
         Route::post('logout', [LoginController::class,'logoutApp']);
 
         Route::name('type.')->prefix('type')->group(function () {
@@ -94,16 +94,16 @@ Route::group(['prefix' => 'web'], function () {
             Route::post('bicy/{id}', [BicyController::class,'update']);
             Route::post('bicyMassive', [BicyController::class,'massiveStore']);
             Route::resource('maintenance', ParkingMaintenancesController::class);
-            
-            Route::post('biker/massiveRawMsg', [BikerController::class,'massiveRawTextMessage']);            
+
+            Route::post('biker/massiveRawMsg', [BikerController::class,'massiveRawTextMessage']);
             Route::resource('biker', BikerController::class);
             Route::post('biker/{id}', [BikerController::class,'update']);
             Route::post('bikerMassive', [BikerController::class,'massiveStore']);
             Route::get('biker-excel', [BikerController::class,'export']);
-            Route::get('biker/verificationCode/{phone}', [BikerController::class,'getVerificationCode'] );        
+            Route::get('biker/verificationCode/{phone}', [BikerController::class,'getVerificationCode'] );
             Route::post('biker/parentVerificationCode/{id}', [ParentsController::class,'getParentVerificationCode']);
             Route::put('biker/{id}/unblock', [BikerController::class,'unblockBiker']);
-            
+
             Route::resource('gender', GenderController::class);
             Route::resource('job', JobController::class);
             Route::resource('neighborhood', NeighborhoodController::class);
@@ -115,6 +115,7 @@ Route::group(['prefix' => 'web'], function () {
             Route::resource('inventory', InventoryController::class);
             Route::resource('inventoryBicy', InventoryBiciesController::class)->only(['store','destroy']);
 
+            //Report
             Route::post('reports',[ReportsController::class, 'show']);
             Route::get('reports/visits/dailyByMonths',[ReportsController::class, 'dailyVisitsByMonths']);
             Route::get('reports/visits/generalBikerByMonths',[ReportsController::class, 'generalBikerVisitsByMonths']);
@@ -122,6 +123,7 @@ Route::group(['prefix' => 'web'], function () {
             Route::get('reports/visits/hourlyByDays',[ReportsController::class, 'hourlyVisitsByDays']);
             Route::get('reports/visits/abandonedBicies',[ReportsController::class, 'visitAbandonedBicies']);
             Route::get('reports/visits/webMapService',[ReportsController::class, 'webMapService']);
+            Route::get('reports/visits/pernoctas',[ReportsController::class, 'pernoctas']);
         });
 
         Route::name('user.')->group(function(){

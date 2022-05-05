@@ -43,15 +43,14 @@ export default {
     return {
         show: true,
         form : {
-            start: null,
-            end: null,
-
+            start: new Date().toISOString(),
+            end: new Date().toISOString(),
             biker_document: null,
         },
         rows : [],
         parkingsData : [],
         columns : [
-            
+
             {
             label : "Bici Estación",
             field : "parking_name",
@@ -86,11 +85,10 @@ export default {
           }else{
             console.warn({res});
             toastr.success("Error en la petición.");
-            
           }
       });
     },
-    
+
     noLess(ymd, date){
       const p1 = date.toISOString(),
         _date = p1.split('T')[0];
@@ -99,15 +97,15 @@ export default {
     onReset(event) {
       event.preventDefault();
       // Reset our form values
-      this.start = null;
-      this.end = null;
+        this.form.start = new Date().toISOString();
+        this.form.end = new Date().toISOString();
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {
         this.show = true;
       });
 
-    }    
+    }
   }
 };
 </script>

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Visit;
 use App\Models\Parking;
 use App\Models\Bicy;
 
@@ -12,6 +11,22 @@ class Visit extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $fillable = [
+            'parkings_id',
+            'parkings_id',
+            'number',
+            'bikers_id',
+            'bikers_id',
+            'bicies_id',
+            'bicies_id',
+            'date_input',
+            'time_input',
+            'date_output',
+            'time_output',
+            'duration',
+            'visit_statuses_id',
+            'visit_statuses_id',
+    ];
 
     public function bicy(){
         return $this->hasOne(Bicy::class, 'id','bicies_id');

@@ -133,7 +133,7 @@ export default {
       es,
       form: {
         start: new Date().toISOString(),
-        end: null,
+          end: new Date().toISOString(),
         biker_document: null,
       },
       rows: [],
@@ -199,7 +199,7 @@ export default {
       let dateStart = new Date(date_input).getTime();
       let dateEnd = new Date(date_output).getTime();
 
-      if (dateStart >= dateEnd) {
+      if (dateStart > dateEnd) {
         return toastr.error(
           "La fecha final no puede ser menor a la fecha inicial"
         );
@@ -249,8 +249,8 @@ export default {
     onReset(event) {
       event.preventDefault();
       // Reset our form values
-      this.start = null;
-      this.end = null;
+      this.form.start = new Date().toISOString();
+      this.form.end = new Date().toISOString();
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {

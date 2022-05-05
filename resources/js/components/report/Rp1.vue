@@ -97,6 +97,7 @@
         </template>
       </vue-good-table>
     </div>
+
   </div>
 </template>
 
@@ -115,7 +116,7 @@ export default {
       show: true,
       form: {
         start: new Date().toISOString(),
-        end: null,
+        end: new Date().toISOString(),
       },
       rows: [],
       parkingsData: [],
@@ -165,13 +166,14 @@ export default {
       let dateStart = new Date(date_input).getTime();
       let dateEnd = new Date(date_output).getTime();
 
-      if (dateStart >= dateEnd) {
+      if (dateStart > dateEnd) {
         return toastr.error("La fecha final no puede ser menor a la fecha inicial")
       }
 
       this.$api.get(`/web/data/reports/visits/dailyByMonths?begining_date=${date_input}&end_date=${date_output}`).then((res) => {
           if (res.status == 200) {
             this.parkingsData = res.data.indexes.parkings;
+            console.log(this.parkingsData);
             this.rows = res.data.response.data.map(el => {
               const parking = this.parkingsData.find(_el => _el.id == el.parking_id);
               el.parking_id = parking ? parking.name : `Error : Bici Estación(${el.parking_id}) no encontrado.`;
@@ -212,8 +214,8 @@ export default {
     onReset(event) {
       event.preventDefault();
       // Reset our form values
-      this.start = null;
-      this.end = null;
+      this.form.start = new Date().toISOString();
+      this.form.end = new Date().toISOString();
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {
