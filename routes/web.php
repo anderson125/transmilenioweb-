@@ -38,6 +38,7 @@ use App\Http\Controllers\DetailedStickerOrderController;
 
 use App\Http\Controllers\Auth\QuerierUserController;
 use App\Http\Controllers\Auth\VigilantUserController;
+use App\Http\Controllers\ServiceSupportController;
 
 use App\Http\Controllers\SpaController;
 use Illuminate\Support\Facades\Auth;
@@ -74,10 +75,12 @@ Route::group(['prefix' => 'web'], function () {
             Route::resource('parking', TypeParkingController::class);
             Route::resource('parent', ParentsController::class);
         });
+
         Route::name('status.')->prefix('status')->group(function () {
             Route::resource('bicy', BicyStatusController::class);
             Route::resource('visit', VisitStatusController::class);
         });
+
         Route::name('data.')->prefix('data')->group(function () {
 
             Route::resource('stickers', ProvisionalStickerOrdersController::class)->only(['index','show','store','update']);
@@ -115,6 +118,10 @@ Route::group(['prefix' => 'web'], function () {
             Route::resource('inventory', InventoryController::class);
             Route::resource('inventoryBicy', InventoryBiciesController::class)->only(['store','destroy']);
 
+            //Mesa de ayuda
+            //Route::resource('servicesupport', ServiceSupportController::class);
+            Route::get('servicesupport', [ServiceSupportController::class, 'index']);
+
             //Report
             Route::post('reports',[ReportsController::class, 'show']);
             Route::get('reports/visits/dailyByMonths',[ReportsController::class, 'dailyVisitsByMonths']);
@@ -138,7 +145,5 @@ Route::group(['prefix' => 'web'], function () {
     Route::get('restorePasswordCode',[UserController::class,'getRestorePasswordCode'] );
     Route::put('restorePassword',[UserController::class,'restorePassword'] );
 });
-
-
 
 Route::get('/{any}', [SpaController::class, 'index'])->where('any', '.*');

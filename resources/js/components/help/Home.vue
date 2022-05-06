@@ -9,9 +9,9 @@
         active-nav-item-class="font-weight-bold text-danger"
         content-class="mt-3"
       >
-        <b-tab title="Mesa de ayuda" active>
+        <b-tab title="Servicio de ayuda" active>
           <div v-if="tabComponent == 0">
-            <XxxComponent />
+            <ServiceSupportComponent />
           </div>
         </b-tab>
       </b-tabs>
@@ -19,11 +19,11 @@
   </div>
 </template>
 <script>
-import XxxComponent from "./Xxx";
+import ServiceSupportComponent from "./ServiceSupport";
 
 export default {
   components: {
-    XxxComponent,
+      ServiceSupportComponent,
   },
   data() {
     return {

@@ -106,7 +106,7 @@
       <li class="nav-item">
         <router-link class="nav-link collapsed" :to="{ name: 'help' }">
           <i class="fas fa-store-alt"></i>
-          <span>Mesa de ayuda</span>
+          <span>Servicio de ayuda</span>
         </router-link>
       </li>
 

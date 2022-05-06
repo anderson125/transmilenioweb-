@@ -12,7 +12,7 @@
         <button v-on:click="addData()" class="btn btn-primary">
           A&ntilde;adir
         </button>
-        <button v-on:click="exportVisit()" class="btn btn-primary">
+        <button v-on:click="exportVisit()" class="btn btn-success">
           Exportar
         </button>
       </div>
@@ -44,7 +44,7 @@
     >
       <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
         <form ref="form" @submit.prevent="handleSubmit(dataSubmit)">
-          
+
           <div class="row">
             <div class="form-group col" data-content="Cicloparqueadero">
               <label for="name">Bici Estación</label>
@@ -94,9 +94,9 @@
                 <datalist id="my-bikers-list-id">
                   <option v-for="(biker,value) in bikersData" :key="value" :value="biker.value">{{ biker.text }}</option>
                 </datalist>
-                
+
                 <span class="form-text text-danger">{{ errors[0] }}</span>
-              </ValidationProvider> 
+              </ValidationProvider>
             </div>
             <div class="form-group col" data-content="Bicicleta">
               <label for="bikersData">Bicicleta</label>
@@ -109,9 +109,9 @@
                 <datalist id="my-bike-list-id">
                   <option v-for="(bike,value) in bikesData" :key="value" :value="bike.value">{{ bike.text }}</option>
                 </datalist>
-                
+
                 <span class="form-text text-danger">{{ errors[0] }}</span>
-              </ValidationProvider> 
+              </ValidationProvider>
             </div>
           </div>
 
@@ -159,7 +159,7 @@
                 <span class="form-text text-danger">{{ errors[0] }}</span>
               </ValidationProvider>
             </div>
-            
+
             <div class="form-group col" v-if="form.id" data-content="Fecha de Salida">
               <label for="name">Fecha de Salida</label>
               <ValidationProvider
@@ -321,7 +321,7 @@ export default {
   },
   methods: {
     addData() {
-      this.resetModal();      
+      this.resetModal();
       this.$bvModal.show("modal-visit");
     },
     handleOk(bvModalEvt) {
@@ -353,17 +353,17 @@ export default {
 
       let bicy = this.bikesData.filter(el => el.value == this.form.bicies_code);
       if(!bicy.length){
-        toastr.error('No se ha conseguido procesar la bicicleta.'); 
-        this.form.bicies_code = null; return; 
+        toastr.error('No se ha conseguido procesar la bicicleta.');
+        this.form.bicies_code = null; return;
       }
       this.form.bicy = bicy[0].id
 
       this.form.parking = this.form.parkings_id;
       this.form.status = this.form.visit_statuses_id;
       this.form.timeOutput = this.form.time_output.substring(0,5);
-       
+
       this.form.timeInput = this.form.time_input.substring(0,5);
-      
+
       // console.log(this.form); return;
       if (this.form.id) {
         this.$api
@@ -480,10 +480,10 @@ export default {
         res.data.response.indexes.parking.forEach((element) => {
           this.parkingData.push(element);
         });
-      }).finally(function() {  
-        let element = document.getElementById("tableVisit")
-        let wb = XLSX.utils.table_to_book(element)
-        localStorage.setItem("tableVisit", JSON.stringify(wb))
+      }).finally(function() {
+        let element = document.getElementById("tableVisit");
+        let wb = XLSX.utils.table_to_book(element);
+        localStorage.setItem("tableVisit", JSON.stringify(wb));
       });
     },
     getParkingVisitsConsecutive(){
@@ -522,10 +522,10 @@ export default {
     },
     updateBicies(){
       let biker = this.bikersData.filter(el => el.value == this.form.document);
-      if(!biker.length){ 
-        toastr.error('No se ha conseguido procesar el ciclista.'); 
+      if(!biker.length){
+        toastr.error('No se ha conseguido procesar el ciclista.');
         console.log(this.form.document, this.bikersData);
-        this.bikesData = []; return; 
+        this.bikesData = []; return;
       }
         this.$api.get("web/data/biker/"+biker[0].id).then((res) => {
         if(res.status == 200){
@@ -541,10 +541,10 @@ export default {
         type: 'binary'
       }
       let wbout = XLSX.write(wb, wopts);
-      FileSaver.saveAs(new Blob([this.s2ab(wbout)], {
-      type: "application/octet-stream;charset=utf-8"
+          FileSaver.saveAs(new Blob([this.s2ab(wbout)], {
+          type: "application/octet-stream;charset=utf-8"
       }), "Visit.xlsx");
-        
+
     },
     s2ab(s) {
       if (typeof ArrayBuffer !== 'undefind') {

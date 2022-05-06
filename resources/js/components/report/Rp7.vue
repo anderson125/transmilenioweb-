@@ -6,6 +6,7 @@
                 <form
                     ref="formPernoctas"
                     @submit.prevent="handleSubmit(dataSubmit)"
+
                     @reset="onReset"
                     v-if="show"
                 >
@@ -74,12 +75,13 @@
 
                     <b-button type="submit" variant="primary">Generar</b-button>
                     <b-button type="reset" variant="danger">Reset</b-button>
+                    <b-button v-on:click="exportPernoctas()" class="btn btn-success">Exportar</b-button>
                 </form>
 
             </ValidationObserver>
         </div>
 
-        <div>
+        <div id="tablePernoctas"> <!-- Nombre de la tabla para poder obtener la informacióin y exportarla -->
             <vue-good-table
                 :columns="columns"
                 :rows="rows"
@@ -101,9 +103,10 @@
 
 <script>
 import toastr from "toastr";
-import Swal from "sweetalert2";
 import Datepicker from "vuejs-datepicker";
 import { en, es } from "vuejs-datepicker/dist/locale";
+import XLSX from "xlsx";
+import FileSaver from 'file-saver' //Importante para exportar
 export default {
     components: {
         //Para mostrar el calendario
@@ -165,20 +168,23 @@ export default {
             this.$api.get(`/web/data/reports/visits/pernoctas?begining_date=${date_input}&end_date=${date_output}`)
                 .then( (res) => {
                     if (res.status == 200) {
-                        console.log(res);
+                        //console.log(res);
                         this.rows = res.data.response.data;
                           if(!this.rows.length){
                               toastr.info('No existen pernoctas para la fecha seleccionada.')
                           } else {
                               this.rows = res.data.response.data;
-                              console.log('pernoctasData', this.rows);
+                              //console.log('pernoctasData', this.rows);
                           }
                     } else {
                          console.warn({res});
                          toastr.success("Error en la petición.");
                     }
-
-                });
+                }).finally(function() {
+                    let element = document.getElementById("tablePernoctas");
+                    let wb = XLSX.utils.table_to_book(element);
+                    localStorage.setItem("tablePernoctas", JSON.stringify(wb));
+            });
         },
         onReset(event) {
             event.preventDefault();
@@ -190,6 +196,31 @@ export default {
             this.$nextTick(() => {
                 this.show = true;
             });
+        },
+        //Exportar información
+        exportPernoctas(){
+            let wb =  JSON.parse(localStorage.getItem('tablePernoctas'));
+            let wopts = {
+                bookType: 'xlsx',
+                bookSST: false,
+                type: 'binary'
+            };
+            let wbout = XLSX.write(wb, wopts);
+            FileSaver.saveAs(new Blob([this.s2ab(wbout)], {
+                type: "application/octet-stream;charset=utf-8"
+            }), "Pernoctas.xlsx");
+        },
+        s2ab(s) {
+            if (typeof ArrayBuffer !== 'undefind') {
+                var buf = new ArrayBuffer(s.length);
+                var view = new Uint8Array(buf);
+                for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+                return buf;
+            } else {
+                var buf = new Array(s.length);
+                for (var i = 0; i != s.length; ++i) buf[i] = s.charCodeAt(i) & 0xFF;
+                return buf;
+            }
         },
     }
 }

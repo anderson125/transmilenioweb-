@@ -14,7 +14,7 @@
         <label for="file-upload" class="btn btn-success my-auto">
           Importar
         </label>
-        <button v-on:click="exportBikers()" class="btn btn-primary">
+        <button v-on:click="exportBikers()" class="btn btn-success">
           Exportar
         </button>
         <input id="file-upload" class="d-none" type="file" />
@@ -60,7 +60,7 @@
     >
       <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
         <form ref="form" @submit.prevent="handleSubmit(dataSubmit)">
-         
+
           <div class="row">
             <div class="form-group col" data-content="Nombre">
               <label for="name">Nombre</label>
@@ -213,7 +213,7 @@
                 <span class="form-text text-danger">{{ errors[0] }}</span>
               </ValidationProvider>
             </div>
-            
+
           <div class="form-group col" data-content="Confirmacion SMS">
             <label for="name">Confirmación SMS</label>
             <ValidationProvider
@@ -231,7 +231,7 @@
             </ValidationProvider>
             </div>
           </div>
-          
+
           <div class="row">
             <div class="form-group col" data-content="Ocupacion">
               <label for="name">Ocupación</label>
@@ -287,7 +287,7 @@
 
           <div class="row">
 
-            
+
             <div class="form-group col" data-content="Parqueadero">
               <label for="parkings_id">Parqueadero</label>
               <ValidationProvider
@@ -370,7 +370,7 @@
                   <span class="form-text text-danger">{{ errors[0] }}</span>
                 </ValidationProvider>
 
-                 
+
 
             </div>
             <div
@@ -419,7 +419,7 @@
       Datepicker,
     },
     data() {
-   
+
       return {
         es: es,
         previewImage: [],
@@ -514,7 +514,7 @@
           {
             label: "Autorizado",
             field: "auth",
-          },   
+          },
           {
             label: "Foto",
             field: "url_img",
@@ -560,7 +560,7 @@
         FileSaver.saveAs(new Blob([this.s2ab(wbout)], {
           type: "application/octet-stream;charset=utf-8"
           }), "Bikers.xlsx");
-        
+
       },
       s2ab(s) {
         if (typeof ArrayBuffer !== 'undefind') {
@@ -574,7 +574,6 @@
           return buf;
         }
       },
-
       handleOk(bvModalEvt) {
         bvModalEvt.preventDefault();
         this.dataSubmit();
@@ -584,7 +583,7 @@
           if(res.status == 200){
             toastr.success("Código de verificación enviado");
           }else{
-            toastr.error("Error inesperado");          
+            toastr.error("Error inesperado");
           }
         });
         this.$bvModal.show("modal-biker");
@@ -710,9 +709,7 @@
           const data = res.data.response.data;
 
           if(data.photo && data.photo.length){
-
             this.previewImage.push(data.photo);
-
           }
 
           data.birth = `${data.birth} 00:00` ;
@@ -740,7 +737,7 @@
           res.data.response.indexes.parkings.forEach((element) => {
             this.parkingsData.push(element);
           });
-        }).finally(function() {  
+        }).finally(function() {
           let element = document.getElementById("tableBiker")
           let wb = XLSX.utils.table_to_book(element)
           localStorage.setItem("table", JSON.stringify(wb))
@@ -753,7 +750,7 @@
     },
     computed: {
       groupedImages() {
-      
+
         return _.chunk(this.previewImage, 3);
         // returns a nested array:
         // [[article, article, article], [article, article, article], ...]

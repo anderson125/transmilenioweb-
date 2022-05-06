@@ -12,7 +12,7 @@
         <button v-on:click="addData()" class="btn btn-primary">
           A&ntilde;adir
         </button>
-        <button v-on:click="exportInventory()" class="btn btn-primary">
+        <button v-on:click="exportInventory()" class="btn btn-success">
           Exportar
         </button>
       </div>

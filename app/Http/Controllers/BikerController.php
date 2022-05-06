@@ -82,8 +82,6 @@ class BikerController extends Controller
                 ->where('parkings.active', '=', 1)
                 ->get();
 
-
-
             $active = [
                 ["text" => "Activo", "value" => 1],
                 ["text" => "Inactivo", "value" => 2],
@@ -92,6 +90,7 @@ class BikerController extends Controller
         } catch (QueryException $th) {
             Log::emergency($th);
         }
+
         return response()->json(
             [
                 'message' => "Sucess",
@@ -349,7 +348,6 @@ class BikerController extends Controller
     {
 
         try {
-
             $biker = ($this->client == 'web')
                 ? Biker::find($id)->whereRaw("phone != ''")
                 : Biker::whereRaw("document = $id and phone != ''")->first();
@@ -750,7 +748,6 @@ class BikerController extends Controller
         }
     }
 
-
     public function getVerificationCode(Request $request, $phone)
     {
         return Biker::getVerificationCode($phone);
@@ -923,8 +920,6 @@ class BikerController extends Controller
 
         return response()->json(['message' => 'Success', 'response' => ['data' => ['bikers' => $Bikers], 'indexes' => [], 'errors' => ['storeErrors' => $storeErrors]]], 200);
     }
-
-
 
     public function massiveRawTextMessage(Request $request)
     {

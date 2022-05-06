@@ -11,7 +11,7 @@
         enabled: true,
         initialSortBy: {field: '_id', type: 'asc'}
       }"
-      
+
     >
       <div slot="table-actions">
         <button v-on:click="addData()" class="btn btn-primary">
@@ -20,7 +20,7 @@
         <label for="file-upload" class="btn btn-success my-auto">
           Importar
         </label>
-        <button v-on:click="exportBicies()" class="btn btn-primary">
+        <button v-on:click="exportBicies()" class="btn btn-success">
           Exportar
         </button>
         <input id="file-upload" class="d-none" type="file" />
@@ -72,8 +72,8 @@
     >
       <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
         <form ref="form" @submit.prevent="handleSubmit(dataSubmit)">
-          
-          
+
+
           <div class="form-group" data-content="Cicloparqueadero">
             <label for="name">Bici Estación</label>
             <ValidationProvider
@@ -92,12 +92,12 @@
               <span class="form-text text-danger">{{ errors[0] }}</span>
             </ValidationProvider>
           </div>
-          
+
           <div class="row">
 
             <div class="form-group col" data-content="Documento Ciclista">
               <label for="bikersData">Documento Ciclista</label>
-             
+
               <ValidationProvider
                 name="documento"
                 rules="required|min:5|max:20|numeric"
@@ -107,9 +107,9 @@
                 <datalist id="my-list-id">
                   <option v-for="(biker,value) in bikersData" :key="value" :value="biker.value">{{ biker.text }}</option>
                 </datalist>
-                
+
                 <span class="form-text text-danger">{{ errors[0] }}</span>
-              </ValidationProvider> 
+              </ValidationProvider>
 
             </div>
 
@@ -261,7 +261,7 @@
                 <span class="form-text text-danger">{{ errors[0] }}</span>
               </ValidationProvider>
             </div>
-            
+
           </div>
 
           <div class="row" data-content="photo">
@@ -387,7 +387,7 @@
             </button>
           </div>
         </form>
-        
+
       </ValidationObserver>
     </b-modal>
 
@@ -583,7 +583,7 @@ export default {
       FileSaver.saveAs(new Blob([this.s2ab(wbout)], {
       type: "application/octet-stream;charset=utf-8"
       }), "Bicies.xlsx");
-        
+
     },
     s2ab(s) {
       if (typeof ArrayBuffer !== 'undefind') {
@@ -617,7 +617,7 @@ export default {
       data.append("parkings_id", this.form.parkings_id);
       data.append("serial", this.form.serial);
       data.append("active", this.form.active);
-      
+
       data.append("image_front", this.form.image_front);
       data.append("image_back", this.form.image_back);
       data.append("image_side", this.form.image_side);
@@ -719,7 +719,7 @@ export default {
         this.form = data;
       });
       this.$bvModal.show("modal-bicy");
-      
+
     },
     getData(option = false) {
       this.$api.get("web/data/bicy").then((res) => {
@@ -733,9 +733,9 @@ export default {
 
           this.parkingData = [{ value: null, text: "Selecciona una opcion" }].concat( res.data.response.indexes.parking.map(el => el) );
           this.typeData = [{ value: null, text: "Selecciona una opcion" }].concat( res.data.response.indexes.type.map(el => el) );
-          
+
         }
-      }).finally(function() {  
+      }).finally(function() {
         let element = document.getElementById("tableBicies")
         let wb = XLSX.utils.table_to_book(element)
         localStorage.setItem("tableBicies", JSON.stringify(wb))
@@ -747,7 +747,7 @@ export default {
         }
         this.bikersData = data;
       });
-      
+
     },
     rowStyleClassFn(row){
       return row.active == 1 ? '' : 'alert alert-danger'

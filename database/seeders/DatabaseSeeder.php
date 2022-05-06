@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Service_support;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
@@ -34,7 +35,8 @@ class DatabaseSeeder extends Seeder
             VisitStatusSeeder::class,
             RolePermissionsSeed::class,
             UserAppSeeder::class,
-            VisitSeeder::class
+            VisitSeeder::class,
+            ServiceSupportSeeder::class
         ]);
         Schema::enableForeignKeyConstraints();
     }
